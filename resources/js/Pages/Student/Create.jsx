@@ -1,14 +1,24 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
+import { Head, useForm } from "@inertiajs/react";
 
-export default function Index({ auth, students }) {
-    // console.log(students.meta);
+export default function Create({ auth, classes }) {
+    const { data, setData, post, processing, errors } = useForm({
+        name: "",
+        email: "",
+        class_id: "",
+        section_id: "",
+    });
+
+    function submit(e) {
+        e.preventDefault();
+        // post("/login");
+    }
     return (
         <AuthenticatedLayout
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Dashboard
+                    Create Student
                 </h2>
             }
         >
@@ -40,6 +50,13 @@ export default function Index({ auth, students }) {
                                             </label>
                                             <input
                                                 type="text"
+                                                value={data.name}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "name",
+                                                        e.target.value
+                                                    )
+                                                }
                                                 id="name"
                                                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error text-red-900 focus:ring-red-500 focus:border-red-500 border-red-300 @enderror"
                                             />
@@ -57,6 +74,13 @@ export default function Index({ auth, students }) {
                                             </label>
                                             <input
                                                 type="email"
+                                                value={data.email}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "email",
+                                                        e.target.value
+                                                    )
+                                                }
                                                 id="email"
                                                 autocomplete="email"
                                                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -72,6 +96,13 @@ export default function Index({ auth, students }) {
                                             </label>
                                             <select
                                                 id="class_id"
+                                                value={data.class_id}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "class_id",
+                                                        e.target.value
+                                                    )
+                                                }
                                                 class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                             >
                                                 <option value="">
@@ -92,6 +123,13 @@ export default function Index({ auth, students }) {
                                             </label>
                                             <select
                                                 id="section_id"
+                                                value={data.section_id}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "section_id",
+                                                        e.target.value
+                                                    )
+                                                }
                                                 class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                             >
                                                 <option value="">
