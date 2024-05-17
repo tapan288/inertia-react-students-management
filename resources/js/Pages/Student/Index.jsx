@@ -90,7 +90,9 @@ export default function Index({ auth, students }) {
                                                 {students.data.map(
                                                     (student) => {
                                                         return (
-                                                            <tr>
+                                                            <tr
+                                                                key={student.id}
+                                                            >
                                                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                                                                     {student.id}
                                                                 </td>
@@ -125,12 +127,15 @@ export default function Index({ auth, students }) {
                                                                 </td>
 
                                                                 <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                                                    <a
-                                                                        href="#"
+                                                                    <Link
+                                                                        href={route(
+                                                                            "students.edit",
+                                                                            student.id
+                                                                        )}
                                                                         className="text-indigo-600 hover:text-indigo-900"
                                                                     >
                                                                         Edit
-                                                                    </a>
+                                                                    </Link>
                                                                     <button className="ml-2 text-indigo-600 hover:text-indigo-900">
                                                                         Delete
                                                                     </button>

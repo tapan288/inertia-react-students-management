@@ -1,7 +1,6 @@
 import { router } from "@inertiajs/react";
 
 export default function Pagination({ meta }) {
-    console.log(meta);
     function linkClicked(link) {
         router.visit(link.url, {
             preserveScroll: true,
@@ -36,9 +35,10 @@ export default function Pagination({ meta }) {
                                     className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
                                     aria-label="Pagination"
                                 >
-                                    {meta.links.map((link) => {
+                                    {meta.links.map((link, index) => {
                                         return (
                                             <button
+                                                key={index}
                                                 disabled={
                                                     link.active || !link.url
                                                 }
