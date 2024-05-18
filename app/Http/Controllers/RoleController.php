@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Resources\RoleResource;
 use App\Http\Requests\StoreRoleRequest;
+use App\Http\Requests\UpdateRoleRequest;
 
 class RoleController extends Controller
 {
@@ -27,6 +28,20 @@ class RoleController extends Controller
     public function store(StoreRoleRequest $request)
     {
         Role::create($request->validated());
+
+        return redirect()->route('roles.index');
+    }
+
+    public function edit(Role $role)
+    {
+        return Inertia::render('Role/Edit', [
+            'role' => RoleResource::make($role)
+        ]);
+    }
+
+    public function update(UpdateRoleRequest $request, Role $role)
+    {
+        $role->update($request->validated());
 
         return redirect()->route('roles.index');
     }
