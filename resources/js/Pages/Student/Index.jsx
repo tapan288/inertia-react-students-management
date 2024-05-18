@@ -1,8 +1,15 @@
 import Pagination from "@/Components/Pagination";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 
 export default function Index({ auth, students }) {
+    function deleteStudent(id) {
+        if (confirm("Are you sure you want to delete this student?")) {
+            router.delete(route("students.destroy", id), {
+                preserveScroll: true,
+            });
+        }
+    }
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -66,7 +73,7 @@ export default function Index({ auth, students }) {
                                                         scope="col"
                                                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                                                     >
-                                                        ClassName
+                                                        Class
                                                     </th>
                                                     <th
                                                         scope="col"
@@ -136,7 +143,14 @@ export default function Index({ auth, students }) {
                                                                     >
                                                                         Edit
                                                                     </Link>
-                                                                    <button className="ml-2 text-indigo-600 hover:text-indigo-900">
+                                                                    <button
+                                                                        onClick={() =>
+                                                                            deleteStudent(
+                                                                                student.id
+                                                                            )
+                                                                        }
+                                                                        className="ml-2 text-indigo-600 hover:text-indigo-900"
+                                                                    >
                                                                         Delete
                                                                     </button>
                                                                 </td>
