@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PermissionResource;
 use App\Models\Role;
 use Inertia\Inertia;
+use App\Models\Permission;
 use Illuminate\Http\Request;
 use App\Http\Resources\RoleResource;
 use App\Http\Requests\StoreRoleRequest;
@@ -22,12 +24,22 @@ class RoleController extends Controller
 
     public function create()
     {
-        return Inertia::render('Role/Create');
+        $permissions = PermissionResource::collection(Permission::all());
+
+        return Inertia::render('Role/Create', [
+            'permissions' => $permissions
+        ]);
     }
 
     public function store(StoreRoleRequest $request)
     {
-        Role::create($request->validated());
+        $role = Role::create($request->validated());
+
+        $permissions = collect($request->selectedPermissions)->map(function ($permission) {
+            return $permission['value'];
+        });
+
+        $role->permissions()->sync($permissions);
 
         return redirect()->route('roles.index');
     }

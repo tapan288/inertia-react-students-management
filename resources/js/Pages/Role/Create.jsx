@@ -1,10 +1,19 @@
 import InputError from "@/Components/InputError";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
+import Select from "react-select";
 
-export default function Create({ auth }) {
+export default function Create({ auth, permissions }) {
     const { data, setData, post, processing, errors } = useForm({
         title: "",
+        selectedPermissions: [],
+    });
+
+    const options = permissions.data.map((permission) => {
+        return {
+            value: permission.id,
+            label: permission.title,
+        };
     });
 
     function submit(e) {
@@ -63,6 +72,26 @@ export default function Create({ auth }) {
                                             />
                                             <InputError
                                                 message={errors.title}
+                                            />
+                                        </div>
+                                        <div className="col-span-6 sm:col-span-3">
+                                            <label
+                                                htmlFor="permissions"
+                                                className="block text-sm font-medium text-gray-700"
+                                            >
+                                                Permissions
+                                            </label>
+                                            <Select
+                                                onChange={(
+                                                    selectedPermissions
+                                                ) => {
+                                                    setData(
+                                                        "selectedPermissions",
+                                                        selectedPermissions
+                                                    );
+                                                }}
+                                                isMulti
+                                                options={options}
                                             />
                                         </div>
                                     </div>
