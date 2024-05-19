@@ -1,10 +1,26 @@
 import InputError from "@/Components/InputError";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
+import Select from "react-select";
 
-export default function Edit({ auth, role }) {
+export default function Edit({ auth, role, permissions }) {
+    const selectedPermissions = role.data.permissions.map((permission) => {
+        return {
+            value: permission.id,
+            label: permission.title,
+        };
+    });
+
     const { data, setData, put, processing, errors } = useForm({
         title: role.data.title,
+        selectedPermissions: selectedPermissions,
+    });
+
+    const options = permissions.data.map((permission) => {
+        return {
+            value: permission.id,
+            label: permission.title,
+        };
     });
 
     function submit(e) {
@@ -63,6 +79,29 @@ export default function Edit({ auth, role }) {
                                             />
                                             <InputError
                                                 message={errors.title}
+                                            />
+                                        </div>
+                                        <div className="col-span-6 sm:col-span-3">
+                                            <label
+                                                htmlFor="permissions"
+                                                className="block text-sm font-medium text-gray-700"
+                                            >
+                                                Permissions
+                                            </label>
+                                            <Select
+                                                defaultValue={
+                                                    selectedPermissions
+                                                }
+                                                onChange={(
+                                                    selectedPermissions
+                                                ) => {
+                                                    setData(
+                                                        "selectedPermissions",
+                                                        selectedPermissions
+                                                    );
+                                                }}
+                                                isMulti
+                                                options={options}
                                             />
                                         </div>
                                     </div>
