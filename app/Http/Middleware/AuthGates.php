@@ -20,17 +20,19 @@ class AuthGates
 
         $permissions = [];
 
-        foreach ($user->roles as $role) {
-            foreach ($role->permissions as $singlePermission) {
-                $permissions[] = $singlePermission->title;
+        if ($user) {
+            foreach ($user->roles as $role) {
+                foreach ($role->permissions as $singlePermission) {
+                    $permissions[] = $singlePermission->title;
+                }
             }
-        }
 
-        collect($permissions)->unique()->map(function ($permission) {
-            Gate::define($permission, function () {
-                return true;
+            collect($permissions)->unique()->map(function ($permission) {
+                Gate::define($permission, function () {
+                    return true;
+                });
             });
-        });
+        }
 
         return $next($request);
     }

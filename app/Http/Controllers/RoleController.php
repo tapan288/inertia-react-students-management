@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Models\Permission;
 use Illuminate\Http\Request;
 use App\Http\Resources\RoleResource;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use App\Http\Resources\PermissionResource;
@@ -15,6 +16,8 @@ class RoleController extends Controller
 {
     public function index()
     {
+        Gate::authorize('role_access');
+
         $roles = Role::paginate(10);
 
         return Inertia::render('Role/Index', [
@@ -24,6 +27,8 @@ class RoleController extends Controller
 
     public function create()
     {
+        Gate::authorize('role_create');
+
         $permissions = PermissionResource::collection(Permission::all());
 
         return Inertia::render('Role/Create', [
@@ -33,6 +38,8 @@ class RoleController extends Controller
 
     public function store(StoreRoleRequest $request)
     {
+        Gate::authorize('role_create');
+
         $role = Role::create($request->validated());
 
         $permissions = collect($request->selectedPermissions)->map(function ($permission) {
@@ -46,6 +53,8 @@ class RoleController extends Controller
 
     public function edit(Role $role)
     {
+        Gate::authorize('role_edit');
+
         $role->load('permissions');
         $permissions = PermissionResource::collection(Permission::all());
 
@@ -57,6 +66,8 @@ class RoleController extends Controller
 
     public function update(UpdateRoleRequest $request, Role $role)
     {
+        Gate::authorize('role_edit');
+
         $role->update($request->validated());
 
         $permissions = collect($request->selectedPermissions)->map(function ($permission) {
@@ -70,6 +81,8 @@ class RoleController extends Controller
 
     public function destroy(Role $role)
     {
+        Gate::authorize('role_delete');
+
         $role->delete();
 
         return redirect()->route('roles.index');
