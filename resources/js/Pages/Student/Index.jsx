@@ -1,8 +1,10 @@
 import Pagination from "@/Components/Pagination";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link, router } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
 
 export default function Index({ auth, students }) {
+    const page = usePage();
+
     function deleteStudent(id) {
         if (confirm("Are you sure you want to delete this student?")) {
             router.delete(route("students.destroy", id), {
@@ -35,12 +37,14 @@ export default function Index({ auth, students }) {
                             </div>
 
                             <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                                <Link
-                                    href={route("students.create")}
-                                    className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-                                >
-                                    Add Student
-                                </Link>
+                                {page.props.can.student_create && (
+                                    <Link
+                                        href={route("students.create")}
+                                        className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                                    >
+                                        Add Student
+                                    </Link>
+                                )}
                             </div>
                         </div>
 
@@ -134,25 +138,33 @@ export default function Index({ auth, students }) {
                                                                 </td>
 
                                                                 <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                                                    <Link
-                                                                        href={route(
-                                                                            "students.edit",
-                                                                            student.id
-                                                                        )}
-                                                                        className="text-indigo-600 hover:text-indigo-900"
-                                                                    >
-                                                                        Edit
-                                                                    </Link>
-                                                                    <button
-                                                                        onClick={() =>
-                                                                            deleteStudent(
+                                                                    {page.props
+                                                                        .can
+                                                                        .student_edit && (
+                                                                        <Link
+                                                                            href={route(
+                                                                                "students.edit",
                                                                                 student.id
-                                                                            )
-                                                                        }
-                                                                        className="ml-2 text-indigo-600 hover:text-indigo-900"
-                                                                    >
-                                                                        Delete
-                                                                    </button>
+                                                                            )}
+                                                                            className="text-indigo-600 hover:text-indigo-900"
+                                                                        >
+                                                                            Edit
+                                                                        </Link>
+                                                                    )}
+                                                                    {page.props
+                                                                        .can
+                                                                        .student_delete && (
+                                                                        <button
+                                                                            onClick={() =>
+                                                                                deleteStudent(
+                                                                                    student.id
+                                                                                )
+                                                                            }
+                                                                            className="ml-2 text-indigo-600 hover:text-indigo-900"
+                                                                        >
+                                                                            Delete
+                                                                        </button>
+                                                                    )}
                                                                 </td>
                                                             </tr>
                                                         );
