@@ -1,9 +1,41 @@
 import Pagination from "@/Components/Pagination";
+import MagnifyingGlass from "@/Components/icons/MaginfyingGlass";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router, usePage } from "@inertiajs/react";
+import { useEffect } from "react";
+import { useRef } from "react";
+import { useMemo } from "react";
+import { useState } from "react";
 
 export default function Index({ auth, students }) {
     const page = usePage();
+
+    const [searchTerm, setSearchTerm] = useState("");
+    const isInitialRender = useRef(true);
+
+    let studentsUrl = useMemo(() => {
+        const url = new URL(route("students.index"));
+
+        if (searchTerm) {
+            url.searchParams.append("search", searchTerm);
+        }
+
+        return url;
+    }, [searchTerm]);
+
+    useEffect(() => {
+        if (isInitialRender.current) {
+            // skip the initial render
+            isInitialRender.current = false;
+            return;
+        }
+
+        router.visit(studentsUrl, {
+            preserveScroll: true,
+            preserveState: true,
+            // replace: true,
+        });
+    }, [studentsUrl]);
 
     function deleteStudent(id) {
         if (confirm("Are you sure you want to delete this student?")) {
@@ -45,6 +77,26 @@ export default function Index({ auth, students }) {
                                         Add Student
                                     </Link>
                                 )}
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col justify-start sm:flex-row mt-6">
+                            <div className="relative text-sm text-gray-800 col-span-3">
+                                <div className="absolute pl-2 left-0 top-0 bottom-0 flex items-center pointer-events-none text-gray-500">
+                                    <MagnifyingGlass />
+                                </div>
+
+                                <input
+                                    onChange={(e) =>
+                                        setSearchTerm(e.target.value)
+                                    }
+                                    value={searchTerm}
+                                    type="text"
+                                    autoComplete="off"
+                                    placeholder="Search students data..."
+                                    id="search"
+                                    className="block rounded-lg border-0 py-2 pl-10 text-gray-900 ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                />
                             </div>
                         </div>
 

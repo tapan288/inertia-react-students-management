@@ -14,11 +14,11 @@ use App\Http\Requests\UpdateStudentRequest;
 
 class StudentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         Gate::authorize('student_access');
 
-        $students = Student::paginate(10);
+        $students = Student::search($request)->paginate(10);
 
         return Inertia::render('Student/Index', [
             'students' => StudentResource::collection($students),
