@@ -1,11 +1,6 @@
 import { router } from "@inertiajs/react";
 
-export default function Pagination({ meta }) {
-    function linkClicked(link) {
-        router.visit(link.url, {
-            preserveScroll: true,
-        });
-    }
+export default function Pagination({ meta, updatedPageNumber }) {
     return (
         <div className="max-w-7xl mx-auto py-6">
             <div className="max-w-none mx-auto">
@@ -43,7 +38,7 @@ export default function Pagination({ meta }) {
                                                     link.active || !link.url
                                                 }
                                                 onClick={() =>
-                                                    linkClicked(link)
+                                                    updatedPageNumber(link)
                                                 }
                                                 className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
                                                     link.active

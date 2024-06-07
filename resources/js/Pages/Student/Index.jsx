@@ -2,26 +2,30 @@ import Pagination from "@/Components/Pagination";
 import MagnifyingGlass from "@/Components/icons/MaginfyingGlass";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router, usePage } from "@inertiajs/react";
-import { useEffect } from "react";
-import { useRef } from "react";
-import { useMemo } from "react";
-import { useState } from "react";
+import { useRef, useMemo, useState, useEffect } from "react";
 
 export default function Index({ auth, students }) {
     const page = usePage();
 
     const [searchTerm, setSearchTerm] = useState("");
+    const [pageNumber, setPageNumber] = useState("");
     const isInitialRender = useRef(true);
+
+    const updatedPageNumber = (link) => {
+        setPageNumber(link.url.split("=")[1]);
+    };
 
     let studentsUrl = useMemo(() => {
         const url = new URL(route("students.index"));
+
+        url.searchParams.append("page", pageNumber);
 
         if (searchTerm) {
             url.searchParams.append("search", searchTerm);
         }
 
         return url;
-    }, [searchTerm]);
+    }, [searchTerm, pageNumber]);
 
     useEffect(() => {
         if (isInitialRender.current) {
@@ -226,7 +230,12 @@ export default function Index({ auth, students }) {
                                         </table>
                                     </div>
                                     <div>
-                                        <Pagination meta={students.meta} />
+                                        <Pagination
+                                            updatedPageNumber={
+                                                updatedPageNumber
+                                            }
+                                            meta={students.meta}
+                                        />
                                     </div>
                                 </div>
                             </div>
