@@ -25,9 +25,24 @@ class Student extends Model
 
     public function scopeSearch(Builder $query, Request $request)
     {
-        return $query->where(function ($query) use ($request) {
-            $query->where('name', 'LIKE', "%" . $request->search . "%")
-                ->orWhere('email', 'LIKE', "%" . $request->search . "%");
-        });
+        return $query
+            ->where(function ($query) use ($request) {
+                return $query
+                    ->when(
+                        $request->class_id && $request->search,
+                        function ($query) use ($request) {
+                            $query->where('class_id', $request->class_id)
+                                ->where('name', 'LIKE', "%" . $request->search . "%")
+                                ->orWhere('email', 'LIKE', "%" . $request->search . "%");
+                        }
+                    )
+                    ->when($request->search, function ($query) use ($request) {
+                        $query->where('name', 'LIKE', "%" . $request->search . "%")
+                            ->orWhere('email', 'LIKE', "%" . $request->search . "%");
+                    })
+                    ->when($request->class_id, function ($query) use ($request) {
+                        $query->where('class_id', $request->class_id);
+                    });
+            });
     }
 }

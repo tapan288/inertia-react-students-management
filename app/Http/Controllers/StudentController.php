@@ -19,9 +19,13 @@ class StudentController extends Controller
         Gate::authorize('student_access');
 
         $students = Student::search($request)->paginate(10);
+        $classes = ClassResource::collection(Classes::all());
 
         return Inertia::render('Student/Index', [
             'students' => StudentResource::collection($students),
+            'classes' => $classes,
+            'class_id' => $request->class_id ?? "",
+            'search' => $request->search ?? "",
         ]);
     }
 

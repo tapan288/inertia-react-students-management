@@ -4,11 +4,12 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import { useRef, useMemo, useState, useEffect } from "react";
 
-export default function Index({ auth, students }) {
+export default function Index({ auth, students, classes }) {
     const page = usePage();
 
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm, setSearchTerm] = useState(usePage().props.search || "");
     const [pageNumber, setPageNumber] = useState("");
+    const [classId, setClassId] = useState(usePage().props.class_id || "");
     const isInitialRender = useRef(true);
 
     const updatedPageNumber = (link) => {
@@ -20,12 +21,16 @@ export default function Index({ auth, students }) {
 
         url.searchParams.append("page", pageNumber);
 
+        if (classId) {
+            url.searchParams.append("class_id", classId);
+        }
+
         if (searchTerm) {
             url.searchParams.append("search", searchTerm);
         }
 
         return url;
-    }, [searchTerm, pageNumber]);
+    }, [searchTerm, pageNumber, classId]);
 
     useEffect(() => {
         if (isInitialRender.current) {
@@ -102,6 +107,23 @@ export default function Index({ auth, students }) {
                                     className="block rounded-lg border-0 py-2 pl-10 text-gray-900 ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
                             </div>
+                            <select
+                                value={classId}
+                                onChange={(e) => setClassId(e.target.value)}
+                                className="block rounded-lg border-0 py-2 ml-5 text-gray-900 ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                            >
+                                <option value="">Filter By Class</option>
+                                {classes.data.map((classItem) => {
+                                    return (
+                                        <option
+                                            key={classItem.id}
+                                            value={classItem.id}
+                                        >
+                                            {classItem.name}
+                                        </option>
+                                    );
+                                })}
+                            </select>
                         </div>
 
                         <div className="mt-8 flex flex-col">
