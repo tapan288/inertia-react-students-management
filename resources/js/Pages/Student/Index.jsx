@@ -8,6 +8,7 @@ export default function Index({ auth, students, classes }) {
     const page = usePage();
 
     const [searchTerm, setSearchTerm] = useState(usePage().props.search || "");
+    const [inputValue, setinputValue] = useState(usePage().props.search || "");
     const [pageNumber, setPageNumber] = useState("");
     const [classId, setClassId] = useState(usePage().props.class_id || "");
     const isInitialRender = useRef(true);
@@ -34,7 +35,6 @@ export default function Index({ auth, students, classes }) {
 
     useEffect(() => {
         if (isInitialRender.current) {
-            // skip the initial render
             isInitialRender.current = false;
             return;
         }
@@ -45,6 +45,21 @@ export default function Index({ auth, students, classes }) {
             // replace: true,
         });
     }, [studentsUrl]);
+
+    useEffect(() => {
+        if (inputValue.length == 0) {
+            return;
+        }
+
+        const handler = setTimeout(() => {
+            setSearchTerm(inputValue);
+            setPageNumber("1");
+        }, 2000);
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [inputValue]);
 
     function deleteStudent(id) {
         if (confirm("Are you sure you want to delete this student?")) {
@@ -97,9 +112,9 @@ export default function Index({ auth, students, classes }) {
 
                                 <input
                                     onChange={(e) =>
-                                        setSearchTerm(e.target.value)
+                                        setinputValue(e.target.value)
                                     }
-                                    value={searchTerm}
+                                    value={inputValue}
                                     type="text"
                                     autoComplete="off"
                                     placeholder="Search students data..."
